@@ -1,0 +1,62 @@
+[
+  {
+    "reservationId": "RES-001",
+    "confirmationCode": "CONF001",
+    "guestName": "John Smith",
+    "roomNumber": "301",
+    "roomType": "Deluxe Double",
+    "checkInDate": "2026-03-01",
+    "checkOutDate": "2026-03-05",
+    "status": "confirmed",
+    "guests": 2,
+    "breakfastIncluded": true
+  },
+  {
+    "reservationId": "RES-002",
+    "confirmationCode": "CONF002",
+    "guestName": "Maria Garcia",
+    "roomNumber": "512",
+    "roomType": "Junior Suite",
+    "checkInDate": "2026-03-02",
+    "checkOutDate": "2026-03-07",
+    "status": "confirmed",
+    "guests": 2,
+    "breakfastIncluded": true
+  },
+  {
+    "reservationId": "RES-003",
+    "confirmationCode": "CONF003",
+    "guestName": "Robert Johnson",
+    "roomNumber": "204",
+    "roomType": "Standard Single",
+    "checkInDate": "2026-03-01",
+    "checkOutDate": "2026-03-03",
+    "status": "checked-in",
+    "guests": 1,
+    "breakfastIncluded": false
+  },
+  {
+    "reservationId": "RES-004",
+    "confirmationCode": "CONF004",
+    "guestName": "Emily Chen",
+    "roomNumber": "415",
+    "roomType": "Family Room",
+    "checkInDate": "2026-03-03",
+    "checkOutDate": "2026-03-08",
+    "status": "confirmed",
+    "guests": 4,
+    "breakfastIncluded": true
+  },
+  {
+    "reservationId": "RES-005",
+    "confirmationCode": "CONF005",
+    "guestName": "Michael Brown",
+    "roomNumber": "601",
+    "roomType": "Penthouse Suite",
+    "checkInDate": "2026-02-28",
+    "checkOutDate": "2026-03-02",
+    "status": "checked-in",
+    "guests": 2,
+    "breakfastIncluded": true
+  }
+]

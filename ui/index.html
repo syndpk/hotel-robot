@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Athena Grand — Receptionist</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!--
+    API base URL is resolved at runtime by app.js (see top of file).
+    To point at a non-default backend, add ?apiBase=http://localhost:3000 to the URL.
+  -->
+</head>
+<body>
+
+<header>
+  <div class="logo">🏨</div>
+  <div>
+    <h1>Hotel Athena Grand &mdash; Reception Assistant</h1>
+    <p>Voice &amp; Text Agent &middot; Athens, Greece</p>
+  </div>
+  <div class="header-right">
+    <div class="api-base-info">
+      API: <code id="apiBaseLabel">…</code>
+    </div>
+    <div class="status-dot" id="statusDot" title="Server connection"></div>
+    <button id="traceToggleBtn" class="trace-toggle-btn" title="Toggle Agent Trace">
+      <span>⚙</span>
+      <span class="trace-toggle-label">Trace</span>
+      <span id="traceChevron" class="chevron">▸</span>
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ── Chat panel ─────────────────────────────────────────────── -->
+  <div class="chat-panel">
+
+    <div class="transcript" id="transcript">
+      <div class="msg agent">
+        <div class="bubble">
+          Good day! Welcome to Hotel Athena Grand. I'm your virtual receptionist.<br><br>
+          How may I assist you today? I can help with:<br>
+          &bull; Check-in &amp; check-out<br>
+          &bull; Taxi &amp; transfer bookings<br>
+          &bull; Local recommendations &amp; concierge services
+        </div>
+        <div class="meta">Reception Assistant</div>
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator">
+      <span></span><span></span><span></span>&nbsp; Thinking…
+    </div>
+
+    <div class="input-area">
+
+      <!-- Text input -->
+      <div class="text-row">
+        <input
+          type="text"
+          id="textInput"
+          placeholder="Type a message and press Enter…"
+          autocomplete="off"
+        />
+        <button id="sendBtn">Send</button>
+      </div>
+
+      <!-- Voice / push-to-talk -->
+      <div class="voice-row">
+        <button id="pttBtn" title="Hold to record, release to send">
+          <span id="pttIcon">🎤</span>
+          <span id="pttLabel">Hold to speak</span>
+        </button>
+        <button id="idScanBtn" title="Scan passport or ID card">🪪 ID Scan</button>
+        <button id="voiceToggle" class="active" title="Toggle TTS response">
+          🔊 Voice reply
+        </button>
+        <select id="langSelect" title="Speech recognition language">
+          <option value="en">EN</option>
+          <option value="el">ΕΛ</option>
+          <option value="es">ES</option>
+          <option value="fr">FR</option>
+          <option value="de">DE</option>
+          <option value="it">IT</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Trace panel ─────────────────────────────────────────────── -->
+  <div class="trace-panel" id="tracePanel">
+    <div class="trace-header">
+      <span>⚙ Agent Trace</span>
+      <button id="traceCloseBtn" class="trace-close-btn" title="Close trace">✕</button>
+    </div>
+    <div id="traceLog"></div>
+    <button id="clearTrace">Clear trace</button>
+  </div>
+
+</div>
+
+<!-- Backdrop: tapping outside closes the trace panel on mobile -->
+<div class="trace-backdrop" id="traceBackdrop"></div>
+
+<!-- ── ID Scan Modal ─────────────────────────────────────────────────── -->
+<div id="idModal" class="id-modal" role="dialog" aria-modal="true" aria-labelledby="idModalTitle">
+  <div class="id-modal-content">
+
+    <div class="id-modal-header">
+      <h2 id="idModalTitle">🪪 Scan ID / Passport</h2>
+      <button id="idModalClose" class="id-modal-close" title="Close">✕</button>
+    </div>
+
+    <div class="id-tabs" role="tablist">
+      <button class="id-tab active" id="tabUpload" role="tab">📎 Upload</button>
+      <button class="id-tab" id="tabCamera" role="tab">📷 Camera</button>
+    </div>
+
+    <!-- Upload panel -->
+    <div class="id-panel" id="panelUpload">
+      <div class="id-upload-area" id="idDropZone">
+        <input type="file" id="idFileInput" accept="image/*" hidden />
+        <span class="id-upload-icon">🪪</span>
+        <p>Click or drag &amp; drop a passport / ID photo</p>
+        <p class="id-upload-hint">JPG, PNG or WebP &middot; Max 5 MB</p>
+      </div>
+    </div>
+
+    <!-- Camera panel -->
+    <div class="id-panel id-panel--hidden" id="panelCamera">
+      <div class="id-camera-wrap">
+        <video id="idVideo" autoplay playsinline muted></video>
+        <canvas id="idCanvas" hidden></canvas>
+      </div>
+      <button id="idCaptureBtn" class="id-action-btn">📸 Capture</button>
+    </div>
+
+    <!-- Thumbnail preview (shared between upload and camera) -->
+    <div class="id-preview-wrap id-preview-wrap--hidden" id="idPreviewWrap">
+      <img id="idPreviewImg" src="" alt="Document preview" />
+      <button id="idRetakeBtn" class="id-retake-btn">↩ Retake</button>
+    </div>
+
+    <!-- Status line -->
+    <div class="id-status" id="idStatus"></div>
+
+    <!-- Extracted fields table -->
+    <div class="id-results id-results--hidden" id="idResults">
+      <table class="id-fields-table" id="idFieldsTable"></table>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="id-modal-actions">
+      <button id="idSubmitBtn" class="id-submit-btn" disabled>🔍 Extract Info</button>
+      <button id="idConfirmBtn" class="id-confirm-btn id-confirm-btn--hidden">✓ Confirm &amp; Continue</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
