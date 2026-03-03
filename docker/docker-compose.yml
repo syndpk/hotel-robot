@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  hotel-robot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: hotel-robot:latest
+    container_name: hotel-robot
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - LLM_BACKEND=${LLM_BACKEND:-openai}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - LLAMACPP_ENDPOINT=${LLAMACPP_ENDPOINT:-http://host.docker.internal:8080}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - ELEVENLABS_VOICE_ID=${ELEVENLABS_VOICE_ID:-21m00Tcm4TlvDq8ikWAM}
+      - PORT=3000
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
